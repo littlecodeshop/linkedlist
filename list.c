@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 typedef struct _node{
-    int element;
+    void * element;
     struct _node * next;
 } node;
 
@@ -19,7 +19,7 @@ list* list_init(){
     return l;
 }
 
-void addElement(list * l, int el){
+void addElement(list * l, void * el){
     
     //create the new Node
     node * n = (node*)malloc(sizeof(node));
@@ -33,22 +33,22 @@ void addElement(list * l, int el){
     l->tail = n;
 }
 
-void dump(list l){
+void dump_element(list l,char *format){
 
     node * ptr = l.head;
     while(ptr){
-        printf("=>%d\n",(ptr)->element);
+        printf(format,(ptr)->element);
         ptr = ptr->next;
     }
 }
 
 int main(int argc, char **argv){
     list * l = list_init();
-    addElement(l,1);
-    addElement(l,2);
-    addElement(l,3);
-    addElement(l,4);
-    addElement(l,5);
-    dump(*l);
+    addElement(l,"hello");
+    addElement(l,"world");
+    addElement(l,"this");
+    addElement(l,"is");
+    addElement(l,"Richard");
+    dump_element(*l,"%s\n");
 }
 
