@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename: list 
+ *
+ *    Description: 
+ *
+ *        Version:  1.0
+ *        Created:  Dim 23 nov 09:13:26 2014
+ *       Revision:  none
+ *       Compiler:  clang
+ *
+ *         Author:  Richard Ribier (Coder), 
+ *        Company:  LittleCodeShop
+ *
+ * =====================================================================================
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
