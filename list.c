@@ -64,9 +64,9 @@ void removeElement(list * l, void * el){
 }
 
 
-void dump_list(list l,char *format){
+void dump_list(list *l,char *format){
 
-    node * ptr = l.head;
+    node * ptr = l->head;
     while(ptr){
         printf(format,(ptr)->element);
         ptr = ptr->next;
@@ -77,7 +77,7 @@ void dump_lists(list *l,char *format){
 
     node * ptr = l->head;
     while(ptr){
-        printf("LIST :\n");
+        printf("Dumping List :\n");
         list * al = (list*)(ptr->element);
         dump_list(al,format);
         ptr = ptr->next;
@@ -90,14 +90,21 @@ void test_list(){
     list * l3 = list_init();
     list * l4 = list_init();
 
+    
     addElement(l,"hello");
     addElement(l,"world");
+
     addElement(l2,"this");
     addElement(l2,"is");
     addElement(l2,"Richard");
+
     addElement(l3,l);
     addElement(l3,l2);
-    dump_list(l,"%s\n");
+
+    dump_list(l,"LIST l : %s\n");
+    removeElement(l,"hello");
+    dump_list(l,"LIST l : %s\n");
+
     dump_list(l2,"%s\n");
     dump_lists(l3,"%s\n");
 
@@ -106,6 +113,11 @@ void test_list(){
     dump_list(l2,"%s\n");
     //empty list
     removeElement(l4,"nothing");
+    dump_list(l4,"%s\n");
+
+    dump_lists(l3,"%s\n");
+
+    
 
 }
 
