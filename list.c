@@ -62,9 +62,18 @@ void * removeElement(list * l, void * el){
     }
 
     return NULL;
-
 }
 
+
+void * remove_first(list * l){
+    node * ptr = l->head;
+    return removeElement(l,ptr->element);
+}
+
+void * remove_last(list *l){
+    node * ptr = l->tail;
+    return removeElement(l,ptr->element);
+}
 
 void dump_list(list *l,char *format){
 
@@ -87,6 +96,7 @@ void dump_lists(list *l,char *format){
 }
 
 void test_list(){
+
     list * l = list_init();
     list * l2 = list_init();
     list * l3 = list_init();
@@ -99,6 +109,7 @@ void test_list(){
     addElement(l2,"this");
     addElement(l2,"is");
     addElement(l2,"Richard");
+    addElement(l2,"Ribier");
 
     addElement(l3,l);
     addElement(l3,l2);
@@ -110,7 +121,8 @@ void test_list(){
     dump_list(l2,"%s\n");
     dump_lists(l3,"%s\n");
 
-    removeElement(l2,"is");
+    char *test = removeElement(l2,"is");
+    printf("I got this :%s\n",test);
     removeElement(l2,"tata");
     dump_list(l2,"%s\n");
     //empty list
@@ -119,8 +131,16 @@ void test_list(){
 
     dump_lists(l3,"%s\n");
 
-    
+    printf("test remove first\n");
+    dump_list(l2,"%s\n");
+    remove_first(l2);
+    dump_list(l2,"%s\n");
 
+    printf("test remove last\n");
+    dump_list(l2,"%s\n");
+    remove_last(l2);
+    dump_list(l2,"%s\n");
+    
 }
 
 int main(int argc, char **argv){
