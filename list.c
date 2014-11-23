@@ -50,16 +50,18 @@ void addElement(list * l, void * el){
     l->tail = n;
 }
 
-void removeElement(list * l, void * el){
+void * removeElement(list * l, void * el){
     node ** head_ptr;
     head_ptr = &(l->head); 
     while(*(head_ptr)!=NULL){
         if((*head_ptr)->element == el){
         *head_ptr = (*head_ptr)->next;
-        return;
+        return el;
         }
         head_ptr = &((*head_ptr)->next);
     }
+
+    return NULL;
 
 }
 
