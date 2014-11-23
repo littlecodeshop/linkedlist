@@ -36,7 +36,7 @@ list* list_init(){
     return l;
 }
 
-void addElement(list * l, void * el){
+void add_element(list * l, void * el){
     
     //create the new Node
     node * n = (node*)malloc(sizeof(node));
@@ -50,7 +50,7 @@ void addElement(list * l, void * el){
     l->tail = n;
 }
 
-void * removeElement(list * l, void * el){
+void * remove_element(list * l, void * el){
     node ** head_ptr;
     head_ptr = &(l->head); 
     while(*(head_ptr)!=NULL){
@@ -64,33 +64,39 @@ void * removeElement(list * l, void * el){
     return NULL;
 }
 
+char * format_list_of_strings(node * n)
+{
+    return n->element;
+}
+
+
+void list_dump(list * l,char * (*format)(struct _node *))
+{
+    node * ptr = l->head;
+    while(ptr!=NULL){
+        printf("==> %s\n",format(ptr));
+        ptr=ptr->next;
+    }
+}
 
 void * remove_first(list * l){
     node * ptr = l->head;
-    return removeElement(l,ptr->element);
+    return remove_element(l,ptr->element);
 }
 
 void * remove_last(list *l){
     node * ptr = l->tail;
-    return removeElement(l,ptr->element);
+    return remove_element(l,ptr->element);
 }
 
-void dump_list(list *l,char *format){
 
-    node * ptr = l->head;
-    while(ptr){
-        printf(format,(ptr)->element);
-        ptr = ptr->next;
-    }
-}
-
-void dump_lists(list *l,char *format){
+void test_dump_multiple_lists(list *l,char *format){
 
     node * ptr = l->head;
     while(ptr){
         printf("Dumping List :\n");
         list * al = (list*)(ptr->element);
-        dump_list(al,format);
+        list_dump(al,format_list_of_strings);
         ptr = ptr->next;
     }
 }
@@ -103,43 +109,44 @@ void test_list(){
     list * l4 = list_init();
 
     
-    addElement(l,"hello");
-    addElement(l,"world");
+    add_element(l,"hello");
+    add_element(l,"world");
 
-    addElement(l2,"this");
-    addElement(l2,"is");
-    addElement(l2,"Richard");
-    addElement(l2,"Ribier");
+    add_element(l2,"this");
+    add_element(l2,"is");
+    add_element(l2,"Richard");
+    add_element(l2,"Ribier");
 
-    addElement(l3,l);
-    addElement(l3,l2);
+    add_element(l3,l);
+    add_element(l3,l2);
 
-    dump_list(l,"LIST l : %s\n");
-    removeElement(l,"hello");
-    dump_list(l,"LIST l : %s\n");
+    list_dump(l,format_list_of_strings);
+    list_dump(l,format_list_of_strings);
+    remove_element(l,"hello");
+    list_dump(l,format_list_of_strings);
 
-    dump_list(l2,"%s\n");
-    dump_lists(l3,"%s\n");
+    list_dump(l2,format_list_of_strings);
+    test_dump_multiple_lists(l3,"%s\n");
 
-    char *test = removeElement(l2,"is");
+    char *test = remove_element(l2,"is");
     printf("I got this :%s\n",test);
-    removeElement(l2,"tata");
-    dump_list(l2,"%s\n");
+    remove_element(l2,"tata");
+    list_dump(l2,format_list_of_strings);
     //empty list
-    removeElement(l4,"nothing");
-    dump_list(l4,"%s\n");
+    remove_element(l4,"nothing");
+    list_dump(l4,format_list_of_strings);
 
-    dump_lists(l3,"%s\n");
+    test_dump_multiple_lists(l3,"%s\n");
 
     printf("test remove first\n");
-    dump_list(l2,"%s\n");
+    list_dump(l2,format_list_of_strings);
     remove_first(l2);
-    dump_list(l2,"%s\n");
+    list_dump(l2,format_list_of_strings);
 
     printf("test remove last\n");
-    dump_list(l2,"%s\n");
+    list_dump(l2,format_list_of_strings);
     remove_last(l2);
-    dump_list(l2,"%s\n");
+    list_dump(l2,format_list_of_strings);
     
 }
 
