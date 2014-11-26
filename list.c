@@ -19,6 +19,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//012
+//345
+//678
+int possible_moves[][9] = {
+    {2,1,3},      //0
+    {3,0,2,4},    //1
+    {2,1,5},      //2
+    {3,0,4,6},    //3
+    {4,1,3,5,7},  //4
+    {3,2,4,8},    //5
+    {2,3,7},      //6
+    {3,6,4,8},    //7
+    {2,5,7}       //8
+}; 
+
+
 typedef struct _node{
     void * element;
     struct _node * next;
@@ -149,6 +165,13 @@ void test_list(){
     list_dump(l2,format_list_of_strings);
     
 }
+/* ======== Slide Puzzle specifics ========*/
+list * possibleMoves(){
+    
+    
+    
+}
+
 
 int main(int argc, char **argv){
     test_list();
