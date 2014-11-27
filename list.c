@@ -179,6 +179,7 @@ char * format_slide(node *n)
         tmp[index++]='|';
         for(i=0;i<3;i++){
             tmp[index++]=position[i+(j*3)];
+            tmp[index++]='|';
         }
         tmp[index++] = '\n';
     }
