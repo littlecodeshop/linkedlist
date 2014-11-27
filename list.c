@@ -63,7 +63,7 @@ void add_element(list * l, void * el){
         l->head = n;
         l->tail = n;
     } 
-    l->tail->next = n;
+    //l->tail->next = n;
     l->tail = n;
 }
 
