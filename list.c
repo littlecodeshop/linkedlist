@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 //012
 //345
@@ -90,7 +91,7 @@ void list_dump(list * l,char * (*format)(struct _node *))
 {
     node * ptr = l->head;
     while(ptr!=NULL){
-        printf("==> %s\n",format(ptr));
+        printf("%s\n",format(ptr));
         ptr=ptr->next;
     }
 }
@@ -166,14 +167,68 @@ void test_list(){
     
 }
 /* ======== Slide Puzzle specifics ========*/
-list * possibleMoves(){
+char * format_slide(node *n)
+{
     
-    
-    
+    char * tmp = (char*)malloc(24);
+    char * position = (char*)n->element;
+    int i,j,index=0;
+    for(j=0;j<3;j++){
+        tmp[index++]='|';
+        for(i=0;i<3;i++){
+            tmp[index++]=position[i+(j*3)];
+        }
+        tmp[index++] = '\n';
+    }
+    return tmp;
 }
 
+void slide_dump(char * position)
+{
+    int i,j;
+    for(j=0;j<3;j++){
+        printf("|");
+        for(i=0;i<3;i++){
+            printf("%c|",position[i+(j*3)]);
+        }
+        printf("\n");
+    }
+
+}
+
+/**
+ * Generates a list containing the list of successors
+ * from the passed position
+ */
+
+list * slide_successors(char * position)
+{
+
+    list * l = list_init();
+
+    //find the position of 0 
+    int i,index = 0;
+    while(position[index]!='0'){
+        index++;
+    }
+
+    //index a la position 
+    int cnt = possible_moves[index][0];
+    for(i = 1;i<=cnt;i++){
+        int spot = possible_moves[index][i];
+        char * new_position = strdup(position);
+        //je swappe la position vide avec le spot
+        new_position[index] = new_position[spot];
+        new_position[spot] = '0'; 
+        add_element(l,new_position);
+    }
+
+    return l;
+}
 
 int main(int argc, char **argv){
     test_list();
+    char * position = "012345678";
+    list_dump(slide_successors(position),format_slide);
 }
 
