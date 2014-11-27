@@ -53,6 +53,10 @@ list* list_init(){
     return l;
 }
 
+int empty(list *l){
+    return(l->head == NULL);
+}
+
 void add_element(list * l, void * el){
     
     //create the new Node
@@ -61,9 +65,7 @@ void add_element(list * l, void * el){
     n->next = NULL;
     if(l->head == NULL){ //TODO : comment eviter ca ?
         l->head = n;
-        l->tail = n;
     } 
-    //l->tail->next = n;
     l->tail = n;
 }
 
