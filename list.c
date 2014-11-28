@@ -49,7 +49,8 @@ typedef struct {
 
 list* list_init(){
     list * l = (list*)malloc(sizeof(list));
-    l->head=l->tail=NULL;
+    l->head=NULL;
+    l->tail=NULL;
     return l;
 }
 
@@ -65,8 +66,12 @@ void add_element(list * l, void * el){
     n->next = NULL;
     if(l->head == NULL){ //TODO : comment eviter ca ?
         l->head = n;
+        l->tail = n;
     } 
-    l->tail = n;
+    else{
+        l->tail->next = n;
+        l->tail = n;
+    }
 }
 
 void * remove_element(list * l, void * el){
@@ -130,6 +135,12 @@ void test_list(){
     
     add_element(l,"hello");
     add_element(l,"world");
+    add_element(l,"my name is");
+    add_element(l,"Richard");
+    printf("***** TEST 1 *****\n");
+    list_dump(l,format_list_of_strings);
+    printf("***** TEST 1 *****\n");
+    
 
     add_element(l2,"this");
     add_element(l2,"is");
@@ -229,9 +240,38 @@ list * slide_successors(char * position)
     return l;
 }
 
+
+
+void generic_search(char * start, char * goal, list*(*successors)(char*)){
+    list *closed_set = list_init();
+    list *open_list = list_init();
+    list *path = list_init();
+
+    //au debut la liste des possible paths ne contient que le path avec start
+    add_element(path,start);
+    add_element(open_list,path);
+
+
+    while(1){
+        if(empty(open_list)) //si il n'y a plus rien a tester alors stop !
+            break;
+
+        list * candidate_path = remove_last(open_list);
+        printf("JE VAIS TESTER :\n");
+        list_dump(candidate_path,format_slide);
+        char * position = remove_last(candidate_path);
+        //rajouter une liste pour chaque successors !
+        list * next_to_try = successors(position);
+        printf("Successors :\n");
+        list_dump(next_to_try,format_slide);
+        
+
+    }
+}
+
 int main(int argc, char **argv){
-    test_list();
+    //test_list();
     char * position = "012345678";
-    list_dump(slide_successors(position),format_slide);
+    generic_search("102345678","012345678",slide_successors);
 }
 
