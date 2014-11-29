@@ -132,7 +132,7 @@ void * remove_last(list * l){
 }
 
 
-void test_dump_multiple_lists(list *l,char *format){
+void test_dump_multiple_lists(list *l){
 
     node * ptr = l->head;
     while(ptr){
@@ -239,27 +239,32 @@ void generic_search(char * start, char * goal, list*(*successors)(char*)){
         printf("JE VAIS TESTER :\n");
         list_dump(candidate_path,format_slide);
         char * position = remove_last(candidate_path);
-        //rajouter une liste pour chaque successors !
-        list * next_to_try = successors(position);
-        list_dump(next_to_try,format_slide);
-
         //rajouter le dernier dedans :)
         add_element(candidate_path,position);
+        if(strcmp(position,goal)==0){
+            printf("ON A GAGNé !!\n");
+            list_dump(candidate_path,format_slide);
+            return;
+        }
+        //rajouter une liste pour chaque successors !
+        list * next_to_try = successors(position);
 
         //loop over successors and create a new list and add
         char * succ = NULL;
         while((succ=remove_last(next_to_try))){
+            int i;
             list * new_path = list_copy(candidate_path);
             add_element(new_path,succ);
-            printf("NEW PATH TO TRY\n");
-            list_dump(new_path,format_slide);
-        };
+            add_element(open_list,new_path);
+        }
+        
+
     }
 }
 
 int main(int argc, char **argv){
     test_list();
     char * position = "012345678";
-    generic_search("102345678","012345678",slide_successors);
+    generic_search("120345678","012345678",slide_successors);
 }
 
