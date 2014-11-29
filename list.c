@@ -122,6 +122,8 @@ void * remove_first(list * l){
 
 void * remove_last(list * l){
     node * ptr = l->head;
+    if(ptr==NULL)
+        return NULL;
     while(ptr->next!=NULL)
     {
         ptr = ptr->next;
