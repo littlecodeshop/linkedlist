@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 //012
 //345
@@ -43,14 +44,12 @@ typedef struct _node{
 
 typedef struct {
     node * head; //pointeur sur premier element
-    node * tail; //pointeur sur dernier element
 } list;
 
 
 list* list_init(){
     list * l = (list*)malloc(sizeof(list));
     l->head=NULL;
-    l->tail=NULL;
     return l;
 }
 
@@ -60,19 +59,21 @@ int empty(list *l){
 }
 
 void add_element(list * l, void * el){
-    
+
     //create the new Node
     node * n = (node*)malloc(sizeof(node));
     n->element = el;
     n->next = NULL;
     if(l->head == NULL){ //TODO : comment eviter ca ?
         l->head = n;
-        l->tail = n;
+        return;
     } 
-    else{
-        l->tail->next = n;
-        l->tail = n;
+
+    node * ptr = l->head;
+    while(ptr->next!=NULL){
+        ptr = ptr->next;
     }
+    ptr->next = n;
 }
 
 list* list_copy(const list * l){
@@ -90,8 +91,8 @@ void * remove_element(list * l, void * el){
     head_ptr = &(l->head); 
     while(*(head_ptr)!=NULL){
         if((*head_ptr)->element == el){
-        *head_ptr = (*head_ptr)->next;
-        return el;
+            *head_ptr = (*head_ptr)->next;
+            return el;
         }
         head_ptr = &((*head_ptr)->next);
     }
@@ -119,8 +120,12 @@ void * remove_first(list * l){
     return remove_element(l,ptr->element);
 }
 
-void * remove_last(list *l){
-    node * ptr = l->tail;
+void * remove_last(list * l){
+    node * ptr = l->head;
+    while(ptr->next!=NULL)
+    {
+        ptr = ptr->next;
+    }
     return remove_element(l,ptr->element);
 }
 
@@ -138,67 +143,20 @@ void test_dump_multiple_lists(list *l,char *format){
 
 void test_list(){
 
-    list * l = list_init();
-    list * l2 = list_init();
-    list * l3 = list_init();
-    list * l4 = list_init();
-
-    
-    add_element(l,"hello");
-    add_element(l,"world");
-    add_element(l,"my name is");
-    add_element(l,"Richard");
-    printf("***** TEST 1 *****\n");
-    list_dump(l,format_list_of_strings);
-    printf("***** TEST 1 *****\n");
-    
-
-    add_element(l2,"this");
-    add_element(l2,"is");
-    add_element(l2,"Richard");
-    add_element(l2,"Ribier");
-
-    add_element(l3,l);
-    add_element(l3,l2);
-
-    list_dump(l,format_list_of_strings);
-    list_dump(l,format_list_of_strings);
-    remove_element(l,"hello");
-    list_dump(l,format_list_of_strings);
-
-    list_dump(l2,format_list_of_strings);
-    test_dump_multiple_lists(l3,"%s\n");
-
-    char *test = remove_element(l2,"is");
-    printf("I got this :%s\n",test);
-    remove_element(l2,"tata");
-    list_dump(l2,format_list_of_strings);
-    //empty list
-    remove_element(l4,"nothing");
-    list_dump(l4,format_list_of_strings);
-
-    test_dump_multiple_lists(l3,"%s\n");
-
-    printf("test remove first\n");
-    list_dump(l2,format_list_of_strings);
-    remove_first(l2);
-    list_dump(l2,format_list_of_strings);
-
-    printf("test remove last\n");
-    list_dump(l2,format_list_of_strings);
-    remove_last(l2);
-    list_dump(l2,format_list_of_strings);
-    l2 = list_init();
-    add_element(l2,"Bonjour");
-    add_element(l2,"Richard");
-    add_element(l2,"HIHIHII");
-
-    printf("test copy\n");
-    list* l5 = list_copy(l2);
-    list_dump(l5,format_list_of_strings);
-    
+   //TEST last element
+   list *l = list_init();
+   add_element(l,"hello");
+   add_element(l,"world");
+   list_dump(l,format_list_of_strings);
+   char * t1 = remove_last(l);
+   list_dump(l,format_list_of_strings);
+   char * t2 = remove_last(l);
+   list_dump(l,format_list_of_strings);
+   assert(t1=="world");
+   assert(t2=="hello");
     
 }
+
 /* ======== Slide Puzzle specifics ========*/
 char * format_slide(node *n)
 {
@@ -281,8 +239,19 @@ void generic_search(char * start, char * goal, list*(*successors)(char*)){
         char * position = remove_last(candidate_path);
         //rajouter une liste pour chaque successors !
         list * next_to_try = successors(position);
-        printf("Successors :\n");
         list_dump(next_to_try,format_slide);
+
+        //rajouter le dernier dedans :)
+        add_element(candidate_path,position);
+
+        //loop over successors and create a new list and add
+        char * succ = NULL;
+        while((succ=remove_last(next_to_try))){
+            list * new_path = list_copy(candidate_path);
+            add_element(new_path,succ);
+            printf("NEW PATH TO TRY\n");
+            list_dump(new_path,format_slide);
+        };
     }
 }
 
