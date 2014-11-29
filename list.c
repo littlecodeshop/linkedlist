@@ -54,6 +54,7 @@ list* list_init(){
     return l;
 }
 
+
 int empty(list *l){
     return(l->head == NULL);
 }
@@ -72,6 +73,16 @@ void add_element(list * l, void * el){
         l->tail->next = n;
         l->tail = n;
     }
+}
+
+list* list_copy(const list * l){
+    list * copy = list_init();
+    node * ptr = l->head;
+    while(ptr!=NULL){
+        add_element(copy,ptr->element);
+        ptr = ptr->next;
+    }
+    return copy;
 }
 
 void * remove_element(list * l, void * el){
@@ -177,6 +188,15 @@ void test_list(){
     list_dump(l2,format_list_of_strings);
     remove_last(l2);
     list_dump(l2,format_list_of_strings);
+    l2 = list_init();
+    add_element(l2,"Bonjour");
+    add_element(l2,"Richard");
+    add_element(l2,"HIHIHII");
+
+    printf("test copy\n");
+    list* l5 = list_copy(l2);
+    list_dump(l5,format_list_of_strings);
+    
     
 }
 /* ======== Slide Puzzle specifics ========*/
@@ -251,7 +271,6 @@ void generic_search(char * start, char * goal, list*(*successors)(char*)){
     add_element(path,start);
     add_element(open_list,path);
 
-
     while(1){
         if(empty(open_list)) //si il n'y a plus rien a tester alors stop !
             break;
@@ -264,13 +283,11 @@ void generic_search(char * start, char * goal, list*(*successors)(char*)){
         list * next_to_try = successors(position);
         printf("Successors :\n");
         list_dump(next_to_try,format_slide);
-        
-
     }
 }
 
 int main(int argc, char **argv){
-    //test_list();
+    test_list();
     char * position = "012345678";
     generic_search("102345678","012345678",slide_successors);
 }
