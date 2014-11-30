@@ -58,6 +58,18 @@ int empty(list *l){
     return(l->head == NULL);
 }
 
+int contains(list *l,void * elem){
+
+    node * ptr = l->head;
+    while(ptr!=NULL){
+        if(strcmp(ptr->element,elem)==0)
+            return 1;
+        ptr=ptr->next;
+    }
+
+    return 0;
+}
+
 void add_element(list * l, void * el){
 
     //create the new Node
@@ -232,15 +244,20 @@ void generic_search(char * start, char * goal, list*(*successors)(char*)){
     add_element(open_list,path);
 
     while(1){
-        if(empty(open_list)) //si il n'y a plus rien a tester alors stop !
+        if(empty(open_list)) //si il n'y a plus rien a tester alors stoppe !
             break;
 
-        list * candidate_path = remove_last(open_list);
-        printf("JE VAIS TESTER :\n");
+        list * candidate_path = remove_first(open_list);
+        printf("############ CANDIDATE PATH #################\n");
         list_dump(candidate_path,format_slide);
+        printf("#############################################\n");
+        
+        
         char * position = remove_last(candidate_path);
+        
         //rajouter le dernier dedans :)
         add_element(candidate_path,position);
+        add_element(closed_set,position);
         if(strcmp(position,goal)==0){
             printf("ON A GAGNé !!\n");
             list_dump(candidate_path,format_slide);
@@ -252,19 +269,27 @@ void generic_search(char * start, char * goal, list*(*successors)(char*)){
         //loop over successors and create a new list and add
         char * succ = NULL;
         while((succ=remove_last(next_to_try))){
-            int i;
-            list * new_path = list_copy(candidate_path);
-            add_element(new_path,succ);
-            add_element(open_list,new_path);
+          list_dump(next_to_try,format_slide);
+            if(strcmp(succ,goal)==0){
+                printf("Adding a solution\n");
+            }
+            if(contains(closed_set,succ)){
+                continue;
+            }
+            else{
+                list * new_path = list_copy(candidate_path);
+                add_element(new_path,succ);
+                add_element(open_list,new_path);
+            }
         }
-        
-
     }
 }
 
 int main(int argc, char **argv){
     test_list();
-    char * position = "012345678";
-    generic_search("120345678","012345678",slide_successors);
+    //142
+    //358
+    //607
+    char * position = "142308657";
+    generic_search(position,"012345678",slide_successors);
 }
-
