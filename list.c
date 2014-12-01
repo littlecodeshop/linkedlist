@@ -54,7 +54,7 @@ list* list_init(){
 }
 
 
-int empty(list *l){
+int isEmpty(list *l){
     return(l->head == NULL);
 }
 
@@ -244,13 +244,13 @@ void generic_search(char * start, char * goal, list*(*successors)(char*)){
     add_element(open_list,path);
 
     while(1){
-        if(empty(open_list)) //si il n'y a plus rien a tester alors stoppe !
+        if(isEmpty(open_list)) //si il n'y a plus rien a tester alors stoppe !
             break;
 
         list * candidate_path = remove_first(open_list);
-        printf("############ CANDIDATE PATH #################\n");
-        list_dump(candidate_path,format_slide);
-        printf("#############################################\n");
+        //printf("############ CANDIDATE PATH #################\n");
+        //list_dump(candidate_path,format_slide);
+        //printf("#############################################\n");
         
         
         char * position = remove_last(candidate_path);
@@ -269,7 +269,7 @@ void generic_search(char * start, char * goal, list*(*successors)(char*)){
         //loop over successors and create a new list and add
         char * succ = NULL;
         while((succ=remove_last(next_to_try))){
-          list_dump(next_to_try,format_slide);
+          //list_dump(next_to_try,format_slide);
             if(strcmp(succ,goal)==0){
                 printf("Adding a solution\n");
             }
@@ -287,9 +287,9 @@ void generic_search(char * start, char * goal, list*(*successors)(char*)){
 
 int main(int argc, char **argv){
     test_list();
-    //142
-    //358
-    //607
-    char * position = "142308657";
+    //473
+    //062
+    //815
+    char * position = "432875160";
     generic_search(position,"012345678",slide_successors);
 }
