@@ -47,6 +47,8 @@ typedef struct {
 } list;
 
 
+list * buckets_successors(char * position);
+
 list* list_init(){
     list * l = (list*)malloc(sizeof(list));
     l->head=NULL;
@@ -168,6 +170,9 @@ void test_list(){
    list_dump(l,format_list_of_strings);
    assert(t1=="world");
    assert(t2=="hello");
+   printf("test bucket successor \n");
+   buckets_successors("12");
+   
     
 }
 
@@ -206,6 +211,89 @@ void slide_dump(char * position)
  * Generates a list containing the list of successors
  * from the passed position
  */
+
+
+list * buckets_successors(char * position)
+{
+    //b1 -> 5l max b2 -> 3l max
+    list * l = list_init();
+    int v=atoi(position);
+    //get the bucket 1 value
+    int b1 = v/10;
+    //get the bucket 2 value
+    int b2 = v%10;
+    int tmpb1 = b1;
+    int tmpb2 = b2;
+    //generate the successors
+    
+    //Verse b1 dans b2
+    int possible = 3 - tmpb2; //on peut verser jusqu'a possible dans b2
+    
+    if(tmpb1>=possible){
+        tmpb2+=possible;
+        tmpb1-=possible;
+    }
+    else{ 
+        tmpb2+=tmpb1;
+        tmpb1=0;
+    
+    }
+    char * try1 = (char*)malloc(3*sizeof(char));
+    sprintf(try1,"%02d",10*tmpb1+tmpb2);
+    add_element(l,try1);
+
+    tmpb1 = b1;
+    tmpb2 = b2;
+    //verse b2 dans b1
+    possible = 5 - tmpb1; //on peut verser jusqu'a possible dans b2
+    
+    if(tmpb2>=possible){
+        tmpb1+=possible;
+        tmpb2-=possible;
+    }
+    else{ 
+        tmpb1+=tmpb2;
+        tmpb2=0;
+    }
+    
+    try1 = (char*)malloc(3*sizeof(char));
+    sprintf(try1,"%02d",10*tmpb1+tmpb2);
+    add_element(l,try1);
+
+    //fill b1
+    tmpb1 = b1;
+    tmpb2 = b2;
+    tmpb1 = 5;
+    try1 = (char*)malloc(3*sizeof(char));
+    sprintf(try1,"%02d",10*tmpb1+tmpb2);
+    add_element(l,try1);
+    //fill b2
+    tmpb1 = b1;
+    tmpb2 = b2;
+    tmpb2 = 3;
+    try1 = (char*)malloc(3*sizeof(char));
+    sprintf(try1,"%02d",10*tmpb1+tmpb2);
+    add_element(l,try1);
+    //empty b1
+    tmpb1 = b1;
+    tmpb2 = b2;
+    tmpb1 = 0;
+    try1 = (char*)malloc(3*sizeof(char));
+    sprintf(try1,"%02d",10*tmpb1+tmpb2);
+    add_element(l,try1);
+    //empty b2
+    tmpb1 = b1;
+    tmpb2 = b2;
+    tmpb2 = 0;
+    try1 = (char*)malloc(3*sizeof(char));
+    sprintf(try1,"%02d",10*tmpb1+tmpb2);
+    add_element(l,try1);
+
+    printf("VOILA apres 1 tour :\n");
+    list_dump(l,format_list_of_strings);
+    
+    return l;
+}
 
 list * slide_successors(char * position)
 {
@@ -290,6 +378,8 @@ int main(int argc, char **argv){
     //473
     //062
     //815
+    char * buckets = "00";
+    generic_search(buckets,"40",buckets_successors);
     char * position = "432875160";
     generic_search(position,"012345678",slide_successors);
 }
